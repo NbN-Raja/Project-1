@@ -1,5 +1,6 @@
-<div class="row bg-black text-center text-white">
+<div class="row  text-center ">
     <div class="col-12 my-3">
+        All right Reserve to @prashishDubey
 
 
     </div>

@@ -2,113 +2,159 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Online Voting System</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>Login</title>
+    <style>
+    .img {
+        background-image: url('img/blue.jpg');
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    .form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
 
+    .form-box {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-box h3 {
+        margin-bottom: 20px;
+    }
+
+    .form-box form {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .field {
+        margin-bottom: 20px;
+    }
+
+    .field label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .field input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .links {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .links a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .links a:hover {
+        text-decoration: underline;
+    }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-success">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between w-100">
+    <div class="container">
+        <div class="form-container">
+            <div class="box form-box">
+                <?php
+                include("admin/inc/config.php");
 
-                <div class="col d-flex justify-content-center">
-                    <a class="navbar-brand " href="home.php">
-                        <h3>Online Voting System </h3>
-                    </a>
+                if (isset($_POST['submit'])) {
+                    $name = $_POST['Name'];
+                    $password = $_POST['Password'];
+
+                    $query = "SELECT * FROM users WHERE name='" . $name . "' AND password='" . $password . "'";
+                    $result = mysqli_query($db, $query);
+
+                    if ($result && $result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+
+                        session_start();
+                        $_SESSION['user_role'] = $row['user_role'];
+                        $_SESSION['Name'] = $row['Name'];
+                        $_SESSION['user_id'] = $row['id'];
+
+                        if ($row['user_role'] == "Admin") {
+                            $_SESSION['key'] = "AdminKey";
+                            echo "<script> location.assign('admin/adminhome.php?homepage=1'); </script>";
+                        } else {
+                            $_SESSION['key'] = "VotersKey";
+                            echo "<script> location.assign('voters/home.php'); </script>";
+                        }
+                        exit;
+                    } else {
+                        echo "<p>Invalid username or password.</p>";
+                    }
+                }
+                ?>
+
+                <div class="form-box">
+                    <form action="" method="post">
+                        <h3>Login</h3>
+                        <div class="field input">
+                            <label for="Name">Name</label>
+                            <input type="text" name="Name" id="Name" autocomplete="off" required>
+                        </div>
+
+                        <div class="field input">
+                            <label for="Password">Password</label>
+                            <input type="Password" name="Password" id="Password" autocomplete="off" required>
+                        </div>
+
+                        <div class="field">
+                            <input type="submit" class="btn" name="submit" value="Login">
+                        </div>
+
+                        <div class="links">
+                            Not registered? <a href="register.php">Register</a>
+                        </div>
+                    </form>
                 </div>
 
-            </div>
-
-
-        </div>
-    </nav>
-
-
-    <div id="carouselExampleCaptions" class="carousel slide carousel-fade">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
-                aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
-                aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="img/fontview.jpg" width="1400" height="686" class="d-block w-100" alt="..." />
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 style="color: black;">We are here</h5>
-                    <p style="color: black;">
-                        To provide you this website development for Online Voting System,Welcome to our Online Voting
-                        Platform, the premier destination for secure, transparent, and accessible
-                        online voting. Our platform offers a seamless and straightforward voting process for a wide
-                        range of
-                        elections, from local community polls to organizational elections. With cutting-edge security
-                        and
-                        user-friendly design, participating in democracy has never been easier.
-                    </p>
-                    <div class="mx-2">
-                        <a href="index.php"> <button type="button" class="btn btn-danger">Login</button></a>
-                        <a href="register.php"> <button type="button" class="btn btn-danger">Sign Up</button></a>
-                    </div>
-
-
-
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="img/phh.jpg" width="1400" height="686" class="d-block w-100" alt="..." />
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 style="color: white;">Acknowledge</h5>
-                    <p style="color: white;">You can vote from anywhere you are, and there is less chance of any error .
-                    </p>
-                    <div class="mx-2">
-                        <a href="index.php"> <button type="button" class="btn btn-primary">Login</button></a>
-                        <a href="register.php"> <button type="button" class="btn btn-primary">Sign Up</button></a>
-                    </div>
-
-
-
-                </div>
-
-
-            </div>
-            <div class="carousel-item">
-                <img src="img/BackTalk.jpg" width="1400" height="686" class="d-block w-100" alt="..." />
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 style="color:black ;">Concept</h5>
-                    <p style="color: black;">We begin by understanding your vision and goals.</p>
-                    <div class="mx-2">
-                        <a href="index.php"> <button type="button" class="btn btn-success">Login</button></a>
-                        <a href="register.php"> <button type="button" class="btn btn-success">Sign Up</button></a>
-                    </div>
-
-                </div>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        <div class="">
+            <h1>Online Voting System</h1>
+            <p>Your voice your vote</p>
+        </div>
     </div>
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
 </body>
 
 </html>

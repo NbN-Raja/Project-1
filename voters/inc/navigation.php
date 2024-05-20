@@ -15,6 +15,20 @@
                         <a class="nav-link text-white mr-3" href="profile.php">Profile</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white mr-3" href="profile.php"><?php
+                                                                                // Start the session
+
+
+                                                                                if (isset($_SESSION['Name'])) {
+                                                                                    // Get the username from the session
+                                                                                    $username = $_SESSION['Name'];
+                                                                                    // Use the username as needed
+                                                                                    echo  $username;
+                                                                                }
+                                                                                ?>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white mr-3" href="../admin/logout.php">Logout</a>
                     </li>
                 </ul>
